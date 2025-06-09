@@ -1,12 +1,10 @@
+/*
+Copyright © 2025 NAME HERE <EMAIL ADDRESS>
+*/
 package main
 
-import "log"
-
-func init() {
-	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
-	initConfig()
-}
+import "chl/cmd"
 
 func main() {
-	log.Printf("hello")
+	cmd.Execute()
 }

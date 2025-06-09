@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"github.com/spf13/viper"
@@ -9,8 +9,9 @@ var Conf Config
 
 type Config struct {
 	Feishu struct {
-		AppID     string `mapstructure:"app_id"`
-		AppSecret string `mapstructure:"app_secret"`
+		AppID             string `mapstructure:"app_id"`
+		AppSecret         string `mapstructure:"app_secret"`
+		TenantAccessToken string `mapstructure:"tenant_access_token"`
 	} `mapstructure:"feishu"`
 	Table struct {
 		TableToken string `mapstructure:"table_token"`
@@ -18,11 +19,11 @@ type Config struct {
 	}
 }
 
-func initConfig() {
+func init() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("toml")
 	viper.AddConfigPath("$HOME/.chl")
-	viper.AddConfigPath(".")
+	viper.AddConfigPath("..")
 
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("Error reading config file, %s", err)
@@ -31,4 +32,17 @@ func initConfig() {
 		log.Fatalf("Unable to decode into struct, %v", err)
 	}
 	log.Printf("Config loaded: %+v", Conf)
+}
+
+func setConfig(key, value string) error {
+	viper.Set(key, value)
+	if err := viper.WriteConfig(); err != nil {
+		return err
+	}
+	log.Printf("Config updated: [%s:%s]", key, value)
+	return nil
+}
+
+func SetFeishuTenantAccessToken(token string) error {
+	return setConfig("feishu.tenant_access_token", token)
 }
