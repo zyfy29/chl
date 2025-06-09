@@ -38,10 +38,13 @@ func setConfig(key, value string) error {
 	if err := viper.WriteConfig(); err != nil {
 		return err
 	}
-	log.Printf("Config updated: [%s:%s]", key, value)
 	return nil
 }
 
 func SetFeishuTenantAccessToken(token string) error {
 	return setConfig("feishu.tenant_access_token", token)
+}
+
+func SetSheetID(sheetID string) error {
+	return setConfig("table.sheet_id", sheetID)
 }
