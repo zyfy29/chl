@@ -1,7 +1,7 @@
 package feishu
 
 import (
-	"chl/config"
+	"github.com/zyfy29/chl/config"
 	"testing"
 )
 

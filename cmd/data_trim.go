@@ -4,9 +4,9 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"chl/config"
-	"chl/feishu"
 	"github.com/spf13/cobra"
+	"github.com/zyfy29/chl/config"
+	"github.com/zyfy29/chl/feishu"
 	"slices"
 	"strings"
 )

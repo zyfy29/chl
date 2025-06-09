@@ -1,8 +1,8 @@
 package feishu
 
 import (
-	"chl/config"
 	"fmt"
+	"github.com/zyfy29/chl/config"
 	"resty.dev/v3"
 )
 
