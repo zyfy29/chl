@@ -51,3 +51,10 @@ func (c *Client) Auth(appId, appSecret string) (*AuthResponse, error) {
 
 	return resp.Result().(*AuthResponse), nil
 }
+
+func Index2Range(i, j int) string {
+	// Convert 0-indexed i, j to A1 notation
+	col := string('A' + byte(j))
+	row := i + 1
+	return fmt.Sprintf("%s%d", col, row)
+}

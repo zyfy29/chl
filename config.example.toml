@@ -6,3 +6,7 @@ tenant_access_token = "t-xxx"
 [table]
 table_token = "xxx"
 sheet_id = "abcdef"
+
+[header]
+need_trim = ["username", "password"]
+token = "token"

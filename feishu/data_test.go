@@ -21,3 +21,11 @@ func TestReadRangeData(t *testing.T) {
 		t.Logf("Row %d: %v", i+1, row)
 	}
 }
+
+func TestWriteCellData(t *testing.T) {
+	err := Api.WriteCellData(config.Conf.Table.TableToken, config.Conf.Table.SheetID, "I2", "Hello from golang!")
+	if err != nil {
+		t.Fatalf("Failed to write cell data: %v", err)
+	}
+	t.Log("Data written successfully")
+}

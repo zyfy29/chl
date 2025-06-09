@@ -29,6 +29,9 @@ func any2string(value any) string {
 	}
 }
 
+// ReadRangeData reads data from a specified range in a spreadsheet.
+// The `border` parameter can be used to specify a range like "A1:B2".
+// If `border` is empty, it reads the entire sheet specified by `sheetId`.
 func (c *Client) ReadRangeData(spreadsheetId, sheetId, border string) (*RangeData, error) {
 	range_ := sheetId
 	if border != "" {
@@ -59,4 +62,29 @@ func (c *Client) ReadRangeData(spreadsheetId, sheetId, border string) (*RangeDat
 		}
 	}
 	return &resp.Result().(*Response[RangeData]).Data, nil
+}
+
+// WriteCellData writes data to a specific cell in a spreadsheet.
+// The `cellIndex` parameter should be in the format "A1", "B2", etc.
+func (c *Client) WriteCellData(spreadsheetId, sheetId, cellIndex string, data string) error {
+	range_ := fmt.Sprintf("%s!%s", sheetId, cellIndex+":"+cellIndex)
+	resp, err := c.r.R().
+		SetBody(map[string]any{
+			"valueRange": map[string]any{
+				"range":  range_,
+				"values": [][]string{{data}},
+			},
+		}).
+		SetPathParams(map[string]string{
+			"spreadsheet_token": spreadsheetId,
+		}).
+		Put("/sheets/v2/spreadsheets/{spreadsheet_token}/values")
+
+	if err != nil {
+		return err
+	}
+	if resp.IsError() {
+		return fmt.Errorf("error writing range data\nstatus: %d\nbody: %s", resp.StatusCode(), resp.String())
+	}
+	return nil
 }

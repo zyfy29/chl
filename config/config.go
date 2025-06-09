@@ -17,6 +17,10 @@ type Config struct {
 		TableToken string `mapstructure:"table_token"`
 		SheetID    string `mapstructure:"sheet_id"`
 	}
+	Header struct {
+		NeedTrim []string `mapstructure:"need_trim"`
+		Token    string   `mapstructure:"token"`
+	}
 }
 
 func init() {

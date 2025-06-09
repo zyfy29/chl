@@ -4,9 +4,11 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-
+	"chl/config"
+	"chl/feishu"
 	"github.com/spf13/cobra"
+	"slices"
+	"strings"
 )
 
 // trimCmd represents the trim command
@@ -20,7 +22,44 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("trim called")
+		res, err := feishu.Api.ReadRangeData(config.Conf.Table.TableToken, config.Conf.Table.SheetID, "")
+		if err != nil {
+			cmd.PrintErrf("Error retrieving data: %v\n", err)
+			return
+		}
+		if len(res.ValueRange.Data) == 0 {
+			cmd.Println("No data found in the specified range.")
+			return
+		}
+
+		colIdxToTrim := []int{}
+		for i, cell := range res.ValueRange.Data[0] {
+			if slices.Contains(config.Conf.Header.NeedTrim, cell) {
+				cmd.Printf("Column %s (%d) need to be trim\n", cell, i)
+				colIdxToTrim = append(colIdxToTrim, i)
+			}
+		}
+
+		for i := range res.ValueRange.Data {
+			if i == 0 {
+				continue // Skip header row
+			}
+			for j, cell := range res.ValueRange.Data[i] {
+				if slices.Contains(colIdxToTrim, j) {
+					// Trim the cell value
+					trimmedCell := strings.TrimSpace(cell)
+					if trimmedCell != cell {
+						range_ := feishu.Index2Range(i, j)
+						err := feishu.Api.WriteCellData(config.Conf.Table.TableToken, config.Conf.Table.SheetID, range_, trimmedCell)
+						if err != nil {
+							cmd.PrintErrf("Error writing trimmed data to cell [%d, %d]: %v\n", i, j, err)
+						} else {
+							cmd.Printf("Trimmed cell [%d, %d]: '%s' -> '%s'\n", i, j, cell, trimmedCell)
+						}
+					}
+				}
+			}
+		}
 	},
 }
 
