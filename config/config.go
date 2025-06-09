@@ -31,7 +31,6 @@ func init() {
 	if err := viper.Unmarshal(&Conf); err != nil {
 		log.Fatalf("Unable to decode into struct, %v", err)
 	}
-	log.Printf("Config loaded: %+v", Conf)
 }
 
 func setConfig(key, value string) error {

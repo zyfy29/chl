@@ -4,8 +4,8 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-
+	"chl/config"
+	"chl/feishu"
 	"github.com/spf13/cobra"
 )
 
@@ -20,7 +20,20 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list called")
+		sheets, err := feishu.Api.GetSheets(config.Conf.Table.TableToken)
+		if err != nil {
+			cmd.PrintErrf("Error retrieving sheets: %v\n", err)
+			return
+		}
+		if len(sheets) == 0 {
+			cmd.Println("No sheets found.")
+			return
+		}
+		cmd.Printf("index\tID\tTitle\n")
+		for _, sheet := range sheets {
+			cmd.Printf("%d\t%s\t%s\n", sheet.Index, sheet.SheetId, sheet.Title)
+		}
+		cmd.Println("Total sheets:", len(sheets))
 	},
 }
 

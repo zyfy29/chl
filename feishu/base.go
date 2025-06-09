@@ -2,6 +2,7 @@ package feishu
 
 import (
 	"chl/config"
+	"fmt"
 	"resty.dev/v3"
 )
 
@@ -16,6 +17,12 @@ func init() {
 	r.SetBaseURL("https://open.feishu.cn/open-apis")
 	r.SetHeader("Authorization", "Bearer "+config.Conf.Feishu.TenantAccessToken)
 	Api = Client{r}
+}
+
+type Response[T any] struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+	Data T      `json:"data"`
 }
 
 type AuthResponse struct {
@@ -39,7 +46,7 @@ func (c *Client) Auth(appId, appSecret string) (*AuthResponse, error) {
 	}
 
 	if resp.IsError() {
-		return nil, resp.Error().(*resty.ResponseError).Err
+		return nil, fmt.Errorf("error getting tenant_access_token\nstatus: %d\nbody: %s", resp.StatusCode(), resp.String())
 	}
 
 	return resp.Result().(*AuthResponse), nil
