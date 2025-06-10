@@ -34,7 +34,7 @@ to quickly create a Cobra application.`,
 
 		colIdxToTrim := []int{}
 		for i, cell := range res.ValueRange.Data[0] {
-			if slices.Contains(config.Conf.Header.NeedTrim, cell) {
+			if cell == config.Conf.Header.Username || cell == config.Conf.Header.Password {
 				cmd.Printf("Column %s (%d) need to be trim\n", cell, i)
 				colIdxToTrim = append(colIdxToTrim, i)
 			}

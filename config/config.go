@@ -9,7 +9,8 @@ var Conf Config
 
 type Config struct {
 	Base struct {
-		TicketID int `mapstructure:"ticket_id"`
+		TicketID int    `mapstructure:"ticket_id"`
+		GrpcAddr string `mapstructure:"grpc_addr"`
 	}
 	Feishu struct {
 		AppID             string `mapstructure:"app_id"`
@@ -21,9 +22,10 @@ type Config struct {
 		SheetID    string `mapstructure:"sheet_id"`
 	}
 	Header struct {
-		NeedTrim []string `mapstructure:"need_trim"`
-		Token    string   `mapstructure:"token"`
-		Balance  string   `mapstructure:"balance"`
+		Username string `mapstructure:"username"`
+		Password string `mapstructure:"password"`
+		Token    string `mapstructure:"token"`
+		Balance  string `mapstructure:"balance"`
 	}
 }
 
