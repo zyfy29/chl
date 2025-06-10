@@ -8,6 +8,9 @@ import (
 var Conf Config
 
 type Config struct {
+	Base struct {
+		TicketID int `mapstructure:"ticket_id"`
+	}
 	Feishu struct {
 		AppID             string `mapstructure:"app_id"`
 		AppSecret         string `mapstructure:"app_secret"`
@@ -20,6 +23,7 @@ type Config struct {
 	Header struct {
 		NeedTrim []string `mapstructure:"need_trim"`
 		Token    string   `mapstructure:"token"`
+		Balance  string   `mapstructure:"balance"`
 	}
 }
 

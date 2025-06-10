@@ -4,7 +4,11 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
+	"github.com/zyfy29/chl/config"
+	"github.com/zyfy29/chl/feishu"
+	psdk "github.com/zyfy29/pocketgo"
+	"strconv"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -12,15 +16,56 @@ import (
 // checkCmd represents the check command
 var checkCmd = &cobra.Command{
 	Use:   "check",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Check token and write tp balance to sheet",
+	Long:  `Check token and write tp balance to sheet`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("check called")
+		res, err := feishu.Api.ReadRangeData(config.Conf.Table.TableToken, config.Conf.Table.SheetID, "")
+		if err != nil {
+			cmd.PrintErrf("Error retrieving data: %v\n", err)
+			return
+		}
+		if len(res.ValueRange.Data) == 0 {
+			cmd.Println("No data found in the specified range.")
+			return
+		}
+		cmd.Println("Checking data integrity...")
+
+		tokenColIdx, balanceColIdx := -1, -1
+		for i, cell := range res.ValueRange.Data[0] {
+			if cell == config.Conf.Header.Token {
+				tokenColIdx = i
+			} else if cell == config.Conf.Header.Balance {
+				balanceColIdx = i
+			}
+		}
+		if tokenColIdx == -1 || balanceColIdx == -1 {
+			cmd.Println("Required columns not found in the data.")
+			return
+		}
+
+		for i, row := range res.ValueRange.Data {
+			if i == 0 {
+				continue // Skip header row
+			}
+			result := "Error"
+			token := row[tokenColIdx]
+			if strings.TrimSpace(token) == "" {
+				continue
+			}
+			PApi := psdk.NewClient(token, 500, nil)
+			balance, err := PApi.GetTpBalance(config.Conf.Base.TicketID)
+			if err != nil {
+				cmd.Printf("Row %d: Error retrieving balance for token: %v\n", i, err)
+			} else {
+				result = strconv.Itoa(balance)
+			}
+
+			if err := feishu.Api.WriteCellData(config.Conf.Table.TableToken, config.Conf.Table.SheetID, feishu.Index2Range(i, balanceColIdx), result); err != nil {
+				cmd.Printf("Row %d: Error writing balance '%s' to cell [%d, %d]: %v\n", i, result, i, balanceColIdx, err)
+			} else {
+				cmd.Printf("Row %d: Balance is '%s'\n", i, result)
+			}
+		}
 	},
 }
 

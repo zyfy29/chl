@@ -1,3 +1,6 @@
+[base]
+ticket_id = 3 # 致明天
+
 [feishu]
 app_id = "cli_xxx"
 app_secret = "xxx"
@@ -10,3 +13,4 @@ sheet_id = "abcdef"
 [header]
 need_trim = ["username", "password"]
 token = "token"
+balance = "balance"
