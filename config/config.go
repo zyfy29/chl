@@ -26,6 +26,7 @@ type Config struct {
 		Password string `mapstructure:"password"`
 		Token    string `mapstructure:"token"`
 		Balance  string `mapstructure:"balance"`
+		Result   string `mapstructure:"result"`
 	}
 }
 
