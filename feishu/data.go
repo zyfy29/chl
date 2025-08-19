@@ -88,3 +88,25 @@ func (c *Client) WriteCellData(spreadsheetId, sheetId, cellIndex string, data st
 	}
 	return nil
 }
+
+func (c *Client) WriteCellImage(spreadsheetId, sheetId, cellIndex string, image []byte, name string) error {
+	range_ := fmt.Sprintf("%s!%s", sheetId, cellIndex+":"+cellIndex)
+	resp, err := c.r.R().
+		SetBody(map[string]any{
+			"range": range_,
+			"image": image,
+			"name":  name,
+		}).
+		SetPathParams(map[string]string{
+			"spreadsheet_token": spreadsheetId,
+		}).
+		Post("/sheets/v2/spreadsheets/{spreadsheet_token}/values_image")
+
+	if err != nil {
+		return err
+	}
+	if resp.IsError() {
+		return fmt.Errorf("error writing image data\nstatus: %d\nbody: %s", resp.StatusCode(), resp.String())
+	}
+	return nil
+}
