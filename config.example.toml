@@ -1,6 +1,7 @@
 [base]
 ticket_id = 3 # 致明天
 grpc_addr = "127.0.0.1:50063"
+grpc2_addr = "127.0.0.1:50051" # shop service
 
 [feishu]
 app_id = "cli_xxx"
@@ -17,3 +18,9 @@ password = "password"
 token = "token"
 balance = "balance"
 result = "result"
+
+cookie = "cookie"
+item_id = "item_id"
+order_sn = "order_sn"
+qrcode = "qrcode"
+qrcode_image = "qrcode_image"
