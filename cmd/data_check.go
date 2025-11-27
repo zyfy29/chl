@@ -52,7 +52,7 @@ var checkCmd = &cobra.Command{
 			if strings.TrimSpace(token) == "" {
 				continue
 			}
-			PApi := psdk.NewClient(token, 500, nil)
+			PApi := psdk.NewClient(token, 500, nil, config.Conf.Base.PocketPA)
 			balance, err := PApi.GetTpBalance(config.Conf.Base.TicketID)
 			if err != nil {
 				cmd.Printf("Row %d: Error retrieving balance for token: %v\n", i, err)

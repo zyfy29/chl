@@ -6,7 +6,7 @@ require github.com/spf13/viper v1.20.1
 
 require (
 	github.com/spf13/cobra v1.9.1
-	github.com/zyfy29/pocketgo v0.0.11
+	github.com/zyfy29/pocketgo v0.0.15
 	google.golang.org/grpc v1.67.3
 	google.golang.org/protobuf v1.36.1
 	resty.dev/v3 v3.0.0-beta.3

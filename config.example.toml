@@ -2,6 +2,7 @@
 ticket_id = 3 # 致明天
 grpc_addr = "127.0.0.1:50063"
 grpc2_addr = "127.0.0.1:50051" # shop service
+pocket_pa = "the pa header"
 
 [feishu]
 app_id = "cli_xxx"

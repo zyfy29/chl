@@ -12,6 +12,7 @@ type Config struct {
 		TicketID  int    `mapstructure:"ticket_id"`
 		GrpcAddr  string `mapstructure:"grpc_addr"`
 		Grpc2Addr string `mapstructure:"grpc2_addr"`
+		PocketPA  string `mapstructure:"pocket_pa"`
 	}
 	Feishu struct {
 		AppID             string `mapstructure:"app_id"`

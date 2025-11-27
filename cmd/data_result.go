@@ -56,7 +56,7 @@ to quickly create a Cobra application.`,
 			if strings.TrimSpace(token) == "" {
 				continue
 			}
-			PApi := psdk.NewClient(token, 500, nil)
+			PApi := psdk.NewClient(token, 500, nil, config.Conf.Base.PocketPA)
 			data, err := PApi.GetHandshakeList(config.Conf.Base.TicketID)
 			if err != nil {
 				cmd.Printf("Row %d: Error retrieving result for token: %v\n", i, err)
